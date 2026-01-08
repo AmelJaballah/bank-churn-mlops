@@ -745,27 +745,29 @@ def main():
                         
                         if results:
                             results_df = pd.DataFrame(results)
-                        
-                        col_b1, col_b2, col_b3, col_b4 = st.columns(4)
-                        with col_b1:
-                            st.metric("Total", len(results))
-                        with col_b2:
-                            high = len([r for r in results if r['risk_level'] == 'High'])
-                            st.metric("Risque élevé", high)
-                        with col_b3:
-                            med = len([r for r in results if r['risk_level'] == 'Medium'])
-                            st.metric("Risque modéré", med)
-                        with col_b4:
-                            churn_rate = sum([r['prediction'] for r in results]) / len(results) * 100
-                            st.metric("Taux churn", f"{churn_rate:.1f}%")
-                        
-                        csv = results_df.to_csv(index=False)
-                        st.download_button("📥 Télécharger résultats", csv, "predictions.csv", "text/csv")
-                        
-                        fig = px.histogram(results_df, x='churn_probability', nbins=20, color='risk_level',
-                                          color_discrete_map={'Low': '#10b981', 'Medium': '#f59e0b', 'High': '#ef4444'})
-                        fig.update_layout(title="Distribution des prédictions")
-                        st.plotly_chart(fig, use_container_width=True)
+                            
+                            col_b1, col_b2, col_b3, col_b4 = st.columns(4)
+                            with col_b1:
+                                st.metric("Total", len(results))
+                            with col_b2:
+                                high = len([r for r in results if r['risk_level'] == 'High'])
+                                st.metric("Risque élevé", high)
+                            with col_b3:
+                                med = len([r for r in results if r['risk_level'] == 'Medium'])
+                                st.metric("Risque modéré", med)
+                            with col_b4:
+                                churn_rate = sum([r['prediction'] for r in results]) / len(results) * 100
+                                st.metric("Taux churn", f"{churn_rate:.1f}%")
+                            
+                            csv = results_df.to_csv(index=False)
+                            st.download_button("📥 Télécharger résultats", csv, "predictions.csv", "text/csv")
+                            
+                            fig = px.histogram(results_df, x='churn_probability', nbins=20, color='risk_level',
+                                              color_discrete_map={'Low': '#10b981', 'Medium': '#f59e0b', 'High': '#ef4444'})
+                            fig.update_layout(title="Distribution des prédictions")
+                            st.plotly_chart(fig, use_container_width=True)
+                        else:
+                            st.warning("Aucune prédiction réussie.")
                         
             except Exception as e:
                 st.error(f"Erreur: {e}")
