@@ -55,13 +55,15 @@ jobs:
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
-
-      - name: 🔐 Azure Login
+      - name: 🔐 Azure Login via OIDC
         uses: azure/login@v2
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+  with:
+    client-id: e32833bd-11ab-4a8f-82a1-86d4a70f3abc
+    tenant-id: b7bd4715-4217-48c7-919e-2ea97f592fa7
+    subscription-id: 10ed37ff-9840-4990-b7f6-1a238c5bdfa7
+    enable-oidc: true
+
+
 
       - name: 🐳 Login to ACR
         run: |
