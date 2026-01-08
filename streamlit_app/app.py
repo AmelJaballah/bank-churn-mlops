@@ -744,7 +744,7 @@ def main():
                         status_text.empty()
                         
                         if results:
-                        results_df = pd.DataFrame(results)
+                            results_df = pd.DataFrame(results)
                         
                         col_b1, col_b2, col_b3, col_b4 = st.columns(4)
                         with col_b1:
