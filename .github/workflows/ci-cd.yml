@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
 
 env:
-  # ✅ VALEURS CORRIGÉES POUR VOTRE PROJET
   AZURE_RESOURCE_GROUP: rg-mlops1
   ACR_NAME: acrmlopsq1765467888
   CONTAINER_APP_NAME: bank-churn
@@ -51,36 +50,25 @@ jobs:
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
+
       - name: 🔐 Azure Login
         uses: azure/login@v2
         with:
-          auth-type: service-principal
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
-
-
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 🐳 Login to ACR
-        run: |
-          az acr login --name ${{ env.ACR_NAME }}
+        run: az acr login --name ${{ env.ACR_NAME }}
 
       - name: 🏗️ Build and Push API Image
         run: |
-          echo "📦 Building API image..."
           docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }} .
           docker tag ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }} \
                      ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:latest
-          
-          echo "📤 Pushing to ACR..."
           docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:latest
-          echo "✅ API image pushed!"
 
       - name: 🚀 Deploy API to Container Apps
         uses: azure/CLI@v1
@@ -90,7 +78,6 @@ jobs:
               --name ${{ env.CONTAINER_APP_NAME }} \
               --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
               --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
-            echo "✅ API deployed!"
 
       - name: ✅ Verify API Deployment
         uses: azure/CLI@v1
@@ -113,7 +100,6 @@ jobs:
     needs: build-and-deploy-api
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v3
@@ -121,28 +107,19 @@ jobs:
       - name: 🔐 Azure Login
         uses: azure/login@v2
         with:
-          auth-type: service-principal
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: 🐳 Login to ACR
-        run: |
-          az acr login --name ${{ env.ACR_NAME }}
+        run: az acr login --name ${{ env.ACR_NAME }}
 
       - name: 🏗️ Build and Push Streamlit Image
         run: |
-          echo "📦 Building Streamlit image..."
           cd streamlit_app
           docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }} .
           docker tag ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }} \
                      ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:latest
-          
-          echo "📤 Pushing to ACR..."
           docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:latest
-          echo "✅ Streamlit image pushed!"
 
       - name: 🚀 Deploy Streamlit to Container Apps
         uses: azure/CLI@v1
@@ -152,7 +129,6 @@ jobs:
               --name ${{ env.STREAMLIT_APP_NAME }} \
               --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
               --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }}
-            echo "✅ Streamlit deployed!"
 
       - name: 📊 Final Summary
         uses: azure/CLI@v1
