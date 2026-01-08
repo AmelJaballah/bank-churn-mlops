@@ -705,18 +705,45 @@ def main():
                 st.write("**Aperçu des données:**")
                 st.dataframe(df.head(), use_container_width=True)
                 
-                if st.button("🚀 Lancer l'analyse", type="primary", key="batch_btn"):
-                    results = []
-                    progress_bar = st.progress(0)
-                    
-                    for idx, row in df.iterrows():
-                        feat = row.to_dict()
-                        result = make_prediction(feat)
-                        if result:
-                            results.append({**feat, **result})
-                        progress_bar.progress((idx + 1) / len(df))
-                    
-                    if results:
+                # Validate required columns
+                required_cols = ['CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 
+                                'HasCrCard', 'IsActiveMember', 'EstimatedSalary', 
+                                'Geography_Germany', 'Geography_Spain']
+                missing_cols = [col for col in required_cols if col not in df.columns]
+                
+                if missing_cols:
+                    st.error(f"❌ Colonnes manquantes: {', '.join(missing_cols)}")
+                else:
+                    if st.button("🚀 Lancer l'analyse", type="primary", key="batch_btn"):
+                        results = []
+                        progress_bar = st.progress(0)
+                        status_text = st.empty()
+                        
+                        for idx, row in df.iterrows():
+                            # Ensure proper data types
+                            feat = {
+                                'CreditScore': int(row['CreditScore']),
+                                'Age': int(row['Age']),
+                                'Tenure': int(row['Tenure']),
+                                'Balance': float(row['Balance']),
+                                'NumOfProducts': int(row['NumOfProducts']),
+                                'HasCrCard': int(row['HasCrCard']),
+                                'IsActiveMember': int(row['IsActiveMember']),
+                                'EstimatedSalary': float(row['EstimatedSalary']),
+                                'Geography_Germany': int(row['Geography_Germany']),
+                                'Geography_Spain': int(row['Geography_Spain'])
+                            }
+                            
+                            result = make_prediction(feat)
+                            if result:
+                                results.append({**feat, **result})
+                            
+                            progress_bar.progress((idx + 1) / len(df))
+                            status_text.text(f"Traitement: {idx + 1}/{len(df)}")
+                        
+                        status_text.empty()
+                        
+                        if results:
                         results_df = pd.DataFrame(results)
                         
                         col_b1, col_b2, col_b3, col_b4 = st.columns(4)
