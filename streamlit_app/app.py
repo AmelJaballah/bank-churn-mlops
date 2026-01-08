@@ -321,56 +321,74 @@ def detect_outliers(data: pd.DataFrame, feature: str) -> Dict[str, Any]:
 
 def analyze_prediction_drift(ref_data: pd.DataFrame, prod_data: pd.DataFrame, api_url: str) -> Dict[str, Any]:
     """Analyse l'impact du drift sur les prédictions"""
-    # Sample pour ne pas surcharger l'API
-    ref_sample = ref_data.sample(min(50, len(ref_data)))
-    prod_sample = prod_data.sample(min(50, len(prod_data)))
+    # Sample réduit pour ne pas surcharger l'API
+    ref_sample = ref_data.sample(min(20, len(ref_data)))
+    prod_sample = prod_data.sample(min(20, len(prod_data)))
     
     ref_predictions = []
     prod_predictions = []
     
+    def prepare_features(row):
+        """Prépare et valide les features pour l'API"""
+        try:
+            # Nettoyer et convertir les valeurs
+            feat = {
+                'CreditScore': int(float(row.get('CreditScore', 650))),
+                'Age': int(float(row.get('Age', 40))),
+                'Tenure': int(float(row.get('Tenure', 5))),
+                'Balance': float(row.get('Balance', 50000)),
+                'NumOfProducts': int(float(row.get('NumOfProducts', 2))),
+                'HasCrCard': int(float(row.get('HasCrCard', 1))),
+                'IsActiveMember': int(float(row.get('IsActiveMember', 1))),
+                'EstimatedSalary': float(row.get('EstimatedSalary', 75000)),
+                'Geography_Germany': int(float(row.get('Geography_Germany', 0))),
+                'Geography_Spain': int(float(row.get('Geography_Spain', 0)))
+            }
+            
+            # Valider les ranges
+            feat['CreditScore'] = max(300, min(850, feat['CreditScore']))
+            feat['Age'] = max(18, min(100, feat['Age']))
+            feat['Tenure'] = max(0, min(10, feat['Tenure']))
+            feat['Balance'] = max(0, feat['Balance'])
+            feat['NumOfProducts'] = max(1, min(4, feat['NumOfProducts']))
+            feat['HasCrCard'] = 1 if feat['HasCrCard'] else 0
+            feat['IsActiveMember'] = 1 if feat['IsActiveMember'] else 0
+            feat['Geography_Germany'] = 1 if feat['Geography_Germany'] else 0
+            feat['Geography_Spain'] = 1 if feat['Geography_Spain'] else 0
+            feat['EstimatedSalary'] = max(0, feat['EstimatedSalary'])
+            
+            # Vérifier qu'il n'y a pas de NaN
+            if any(pd.isna(v) or (isinstance(v, float) and np.isnan(v)) for v in feat.values()):
+                return None
+                
+            return feat
+        except Exception as e:
+            return None
+    
     # Prédictions sur données de référence
     for _, row in ref_sample.iterrows():
-        feat = {
-            'CreditScore': int(row.get('CreditScore', 650)),
-            'Age': int(row.get('Age', 40)),
-            'Tenure': int(row.get('Tenure', 5)),
-            'Balance': float(row.get('Balance', 50000)),
-            'NumOfProducts': int(row.get('NumOfProducts', 2)),
-            'HasCrCard': int(row.get('HasCrCard', 1)),
-            'IsActiveMember': int(row.get('IsActiveMember', 1)),
-            'EstimatedSalary': float(row.get('EstimatedSalary', 75000)),
-            'Geography_Germany': int(row.get('Geography_Germany', 0)),
-            'Geography_Spain': int(row.get('Geography_Spain', 0))
-        }
-        try:
-            result = make_prediction(feat)
-            if result:
-                ref_predictions.append(result['churn_probability'])
-        except:
-            continue
+        feat = prepare_features(row)
+        if feat:
+            try:
+                result = make_prediction(feat)
+                if result and 'churn_probability' in result:
+                    ref_predictions.append(result['churn_probability'])
+            except Exception as e:
+                continue
     
     # Prédictions sur données avec drift
     for _, row in prod_sample.iterrows():
-        feat = {
-            'CreditScore': int(row.get('CreditScore', 650)),
-            'Age': int(row.get('Age', 40)),
-            'Tenure': int(row.get('Tenure', 5)),
-            'Balance': float(row.get('Balance', 50000)),
-            'NumOfProducts': int(row.get('NumOfProducts', 2)),
-            'HasCrCard': int(row.get('HasCrCard', 1)),
-            'IsActiveMember': int(row.get('IsActiveMember', 1)),
-            'EstimatedSalary': float(row.get('EstimatedSalary', 75000)),
-            'Geography_Germany': int(row.get('Geography_Germany', 0)),
-            'Geography_Spain': int(row.get('Geography_Spain', 0))
-        }
-        try:
-            result = make_prediction(feat)
-            if result:
-                prod_predictions.append(result['churn_probability'])
-        except:
-            continue
+        feat = prepare_features(row)
+        if feat:
+            try:
+                result = make_prediction(feat)
+                if result and 'churn_probability' in result:
+                    prod_predictions.append(result['churn_probability'])
+            except Exception as e:
+                continue
     
-    if len(ref_predictions) > 0 and len(prod_predictions) > 0:
+    # Analyser seulement si on a assez de prédictions
+    if len(ref_predictions) >= 5 and len(prod_predictions) >= 5:
         from scipy import stats
         ks_stat, p_value = stats.ks_2samp(ref_predictions, prod_predictions)
         
@@ -380,7 +398,9 @@ def analyze_prediction_drift(ref_data: pd.DataFrame, prod_data: pd.DataFrame, ap
             'diff_mean': abs(np.mean(prod_predictions) - np.mean(ref_predictions)),
             'ks_statistic': ks_stat,
             'p_value': p_value,
-            'prediction_drift_detected': ks_stat > 0.2 or p_value < 0.05
+            'prediction_drift_detected': ks_stat > 0.2 or p_value < 0.05,
+            'n_ref': len(ref_predictions),
+            'n_prod': len(prod_predictions)
         }
     
     return None
@@ -780,23 +800,7 @@ def main():
                                 'psi': round(psi, 4),
                                 'drift_detected': psi > 0.1 or p_value < 0.05
                             }
-                            
-                            drift_results[feature] = {
-                                'ks_statistic': round(ks_stat, 4),
-                                'p_value': round(p_value, 6),
-                                'psi': round(psi, 4),
-                                'drift_detected': psi > 0.1 or p_value < 0.05
-                            }
-                    
-                    # Store in session state
-                    st.session_state['drift_results'] = drift_results
-                    st.session_state['ref_data'] = ref_data
-                    st.session_state['prod_data'] = prod_data
-                    st.session_state['drift_intensity'] = drift_intensity
-                    
-                    st.success("✅ Analyse terminée!")
-        
-        with col_drift2:
+
             if 'drift_results' in st.session_state:
                 drift_results = st.session_state['drift_results']
                 
@@ -880,7 +884,13 @@ def main():
                             st.metric("Proba. moy. Prod.", f"{pred_drift['prod_mean']*100:.1f}%")
                         
                         st.caption(f"KS stat: {pred_drift['ks_statistic']:.4f} | p-value: {pred_drift['p_value']:.6f}")
-            , col_exp3 = st.columns(3)
+                        st.caption(f"Échantillons: Réf={pred_drift['n_ref']}, Prod={pred_drift['n_prod']}")
+                    else:
+                        st.warning("⚠️ Analyse impossible - Données insuffisantes ou erreur API")
+            
+            # Export button
+            st.markdown("---")
+            col_exp1, col_exp2, col_exp3 = st.columns(3)
             with col_exp1:
                 csv = drift_df.to_csv(index=False)
                 st.download_button(
@@ -908,10 +918,7 @@ def main():
                     f"{datetime.now().strftime('%Y-%m-%dT%H-%M')}_production_data.csv",
                     "text/csv",
                     help="Données de production avec drift appliqué"
-                    outlier_csv,
-                        f"{datetime.now().strftime('%Y-%m-%dT%H-%M')}_outliers.csv",
-                        "text/csv"
-                    )
+                )
     
     # ═══════════════════════════════════════════════════════════════
     # TAB 3: BATCH PREDICTION
