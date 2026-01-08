@@ -226,11 +226,35 @@ def check_drift() -> Dict[str, Any]:
         return None
 
 def generate_synthetic_drift_data(reference_data: pd.DataFrame, drift_intensity: float = 0.3) -> pd.DataFrame:
-    """Génère des données synthétiques avec drift"""
+    """Génère des données synthétiques avec drift - Structure complète"""
     n_samples = min(500, len(reference_data))
-    prod_data = reference_data.sample(n=n_samples, replace=True).copy()
     
-    numerical_features = ['CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 'EstimatedSalary']
+    # Si les données de référence n'ont pas toutes les colonnes, générer un dataset complet
+    required_cols = ['CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 
+                     'HasCrCard', 'IsActiveMember', 'EstimatedSalary', 
+                     'Geography_Germany', 'Geography_Spain']
+    
+    if not all(col in reference_data.columns for col in required_cols):
+        # Générer des données synthétiques complètes
+        np.random.seed(None)  # Random seed pour variation
+        prod_data = pd.DataFrame({
+            'CreditScore': np.random.normal(650, 100, n_samples),
+            'Age': np.random.normal(40, 12, n_samples),
+            'Tenure': np.random.randint(0, 11, n_samples),
+            'Balance': np.abs(np.random.normal(75000, 50000, n_samples)),
+            'NumOfProducts': np.random.choice([1, 2, 3, 4], n_samples, p=[0.5, 0.4, 0.08, 0.02]),
+            'HasCrCard': np.random.choice([0, 1], n_samples, p=[0.3, 0.7]),
+            'IsActiveMember': np.random.choice([0, 1], n_samples, p=[0.4, 0.6]),
+            'EstimatedSalary': np.random.normal(100000, 50000, n_samples),
+            'Geography_Germany': np.random.choice([0, 1], n_samples, p=[0.7, 0.3]),
+            'Geography_Spain': np.random.choice([0, 1], n_samples, p=[0.8, 0.2])
+        })
+    else:
+        # Copier depuis les données de référence
+        prod_data = reference_data[required_cols].sample(n=n_samples, replace=True).copy()
+    
+    # Appliquer le drift sur les features numériques continues
+    numerical_features = ['CreditScore', 'Age', 'Tenure', 'Balance', 'EstimatedSalary']
     
     for feature in numerical_features:
         if feature in prod_data.columns:
@@ -238,6 +262,26 @@ def generate_synthetic_drift_data(reference_data: pd.DataFrame, drift_intensity:
             prod_data[feature] = prod_data[feature] + mean_shift
             noise = np.random.normal(0, prod_data[feature].std() * drift_intensity * 0.3, len(prod_data))
             prod_data[feature] = prod_data[feature] + noise
+    
+    # S'assurer que NumOfProducts reste dans les limites
+    prod_data['NumOfProducts'] = prod_data['NumOfProducts'].clip(1, 4).astype(int)
+    
+    # S'assurer que les features binaires restent 0 ou 1
+    for col in ['HasCrCard', 'IsActiveMember', 'Geography_Germany', 'Geography_Spain']:
+        prod_data[col] = prod_data[col].round().clip(0, 1).astype(int)
+    
+    # S'assurer que CreditScore reste dans les limites réalistes
+    prod_data['CreditScore'] = prod_data['CreditScore'].clip(300, 850).astype(int)
+    
+    # S'assurer que Age reste dans les limites
+    prod_data['Age'] = prod_data['Age'].clip(18, 100).astype(int)
+    
+    # S'assurer que Tenure reste dans les limites
+    prod_data['Tenure'] = prod_data['Tenure'].clip(0, 10).astype(int)
+    
+    # S'assurer que Balance et Salary sont positifs
+    prod_data['Balance'] = prod_data['Balance'].clip(0, None)
+    prod_data['EstimatedSalary'] = prod_data['EstimatedSalary'].clip(0, None)
     
     return prod_data
 
@@ -696,19 +740,26 @@ def main():
                     try:
                         ref_data = pd.read_csv("https://raw.githubusercontent.com/AmelJaballah/bank-churn-mlops/main/data/bank_churn.csv")
                     except:
-                        # Fallback: generate synthetic reference data
+                        # Fallback: generate synthetic reference data avec toutes les colonnes
                         np.random.seed(42)
                         ref_data = pd.DataFrame({
                             'CreditScore': np.random.normal(650, 100, 1000),
                             'Age': np.random.normal(40, 12, 1000),
                             'Tenure': np.random.randint(0, 11, 1000),
-                            'Balance': np.random.normal(75000, 50000, 1000),
+                            'Balance': np.abs(np.random.normal(75000, 50000, 1000)),
                             'NumOfProducts': np.random.choice([1, 2, 3, 4], 1000, p=[0.5, 0.4, 0.08, 0.02]),
-                            'EstimatedSalary': np.random.normal(100000, 50000, 1000)
+                            'HasCrCard': np.random.choice([0, 1], 1000, p=[0.3, 0.7]),
+                            'IsActiveMember': np.random.choice([0, 1], 1000, p=[0.4, 0.6]),
+                            'EstimatedSalary': np.random.normal(100000, 50000, 1000),
+                            'Geography_Germany': np.random.choice([0, 1], 1000, p=[0.7, 0.3]),
+                            'Geography_Spain': np.random.choice([0, 1], 1000, p=[0.8, 0.2])
                         })
                     
                     # Generate production data with drift
                     prod_data = generate_synthetic_drift_data(ref_data, drift_intensity)
+                    
+                    # Vérifier la structure des données générées
+                    st.caption(f"✅ Données générées: {len(prod_data)} échantillons avec {len(prod_data.columns)} colonnes")
                     
                     # Calculate drift metrics
                     numerical_features = ['CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 'EstimatedSalary']
@@ -829,10 +880,7 @@ def main():
                             st.metric("Proba. moy. Prod.", f"{pred_drift['prod_mean']*100:.1f}%")
                         
                         st.caption(f"KS stat: {pred_drift['ks_statistic']:.4f} | p-value: {pred_drift['p_value']:.6f}")
-            
-            # Export button
-            st.markdown("---")
-            col_exp1, col_exp2 = st.columns(2)
+            , col_exp3 = st.columns(3)
             with col_exp1:
                 csv = drift_df.to_csv(index=False)
                 st.download_button(
@@ -848,6 +896,19 @@ def main():
                     st.download_button(
                         "📥 Télécharger outliers",
                         outlier_csv,
+                        f"{datetime.now().strftime('%Y-%m-%dT%H-%M')}_outliers.csv",
+                        "text/csv"
+                    )
+            with col_exp3:
+                # Export production data with drift
+                prod_csv = prod_data.to_csv(index=False)
+                st.download_button(
+                    "📥 Télécharger données drift",
+                    prod_csv,
+                    f"{datetime.now().strftime('%Y-%m-%dT%H-%M')}_production_data.csv",
+                    "text/csv",
+                    help="Données de production avec drift appliqué"
+                    outlier_csv,
                         f"{datetime.now().strftime('%Y-%m-%dT%H-%M')}_outliers.csv",
                         "text/csv"
                     )
