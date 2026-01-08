@@ -1,0 +1,158 @@
+name: CI/CD Pipeline - Bank Churn MLOps (OpenID Connect)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  AZURE_RESOURCE_GROUP: rg-mlops1
+  ACR_NAME: acrmlopsq1765467888
+  CONTAINER_APP_NAME: bank-churn
+  STREAMLIT_APP_NAME: bank-churn-ui
+  API_IMAGE_NAME: churn-api
+  UI_IMAGE_NAME: churn-streamlit
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    name: 🧪 Tests Unitaires
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🐍 Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov
+
+      - name: 🧪 Run tests
+        run: |
+          pytest tests/ -v --cov=app --cov-report=term-missing
+          echo "✅ Tests réussis!"
+
+  build-and-deploy-api:
+    name: 🚀 Build & Deploy API
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🔐 Azure Login (OpenID Connect)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 🐳 Login to ACR
+        run: |
+          az acr login --name ${{ env.ACR_NAME }}
+
+      - name: 🏗️ Build and Push API Image
+        run: |
+          echo "📦 Building API image..."
+          docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }} .
+          docker tag ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }} \
+                     ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:latest
+
+          echo "📤 Pushing to ACR..."
+          docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:latest
+          echo "✅ API image pushed!"
+
+      - name: 🚀 Deploy API to Container Apps
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az containerapp update \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.API_IMAGE_NAME }}:${{ github.sha }}
+            echo "✅ API deployed!"
+
+      - name: ✅ Verify API Deployment
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            APP_URL=$(az containerapp show \
+              --name ${{ env.CONTAINER_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --query properties.configuration.ingress.fqdn -o tsv)
+            echo "🌐 API URL: https://$APP_URL"
+            echo "⏳ Waiting 30s for startup..."
+            sleep 30
+            curl -f "https://$APP_URL/health" && echo "✅ API is healthy!"
+
+  build-and-deploy-streamlit:
+    name: 🎨 Build & Deploy Streamlit
+    needs: build-and-deploy-api
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v3
+
+      - name: 🔐 Azure Login (OpenID Connect)
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: 🐳 Login to ACR
+        run: |
+          az acr login --name ${{ env.ACR_NAME }}
+
+      - name: 🏗️ Build and Push Streamlit Image
+        run: |
+          echo "📦 Building Streamlit image..."
+          cd streamlit_app
+          docker build -t ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }} .
+          docker tag ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }} \
+                     ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:latest
+
+          echo "📤 Pushing to ACR..."
+          docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }}
+          docker push ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:latest
+          echo "✅ Streamlit image pushed!"
+
+      - name: 🚀 Deploy Streamlit to Container Apps
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az containerapp update \
+              --name ${{ env.STREAMLIT_APP_NAME }} \
+              --resource-group ${{ env.AZURE_RESOURCE_GROUP }} \
+              --image ${{ env.ACR_NAME }}.azurecr.io/${{ env.UI_IMAGE_NAME }}:${{ github.sha }}
+            echo "✅ Streamlit deployed!"
+
+      - name: 📊 Final Summary
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            API_URL=$(az containerapp show --name ${{ env.CONTAINER_APP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --query properties.configuration.ingress.fqdn -o tsv)
+            UI_URL=$(az containerapp show --name ${{ env.STREAMLIT_APP_NAME }} --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --query properties.configuration.ingress.fqdn -o tsv)
+            echo "═══════════════════════════════════════════════"
+            echo "✅ DEPLOYMENT COMPLETE!"
+            echo "═══════════════════════════════════════════════"
+            echo "🔗 API:       https://$API_URL"
+            echo "🎨 Streamlit: https://$UI_URL"
+            echo "📚 Docs:      https://$API_URL/docs"
+            echo "═══════════════════════════════════════════════"
