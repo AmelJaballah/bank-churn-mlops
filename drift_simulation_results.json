@@ -1,0 +1,1241 @@
+[
+  {
+    "timestamp": "2026-01-08T02:10:46.934125",
+    "ks_test": {
+      "timestamp": "2026-01-08T02:10:46.860895",
+      "test_type": "Kolmogorov-Smirnov",
+      "overall_drift": false,
+      "features_with_drift": [],
+      "feature_results": {
+        "CreditScore": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Age": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Balance": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        }
+      }
+    },
+    "psi_test": {
+      "timestamp": "2026-01-08T02:10:46.898319",
+      "test_type": "Population Stability Index",
+      "overall_drift": false,
+      "features_with_drift": [],
+      "feature_results": {
+        "CreditScore": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Age": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "statistical_test": {
+      "timestamp": "2026-01-08T02:10:46.934125",
+      "test_type": "Statistical Comparison",
+      "overall_drift": false,
+      "features_with_drift": [],
+      "feature_results": {
+        "CreditScore": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999937107088,
+          "ref_mean": 574.8849,
+          "curr_mean": 574.8849,
+          "ref_std": 159.00042693517068,
+          "curr_std": 159.00042693517068,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Age": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999442025516,
+          "ref_mean": 48.4483,
+          "curr_mean": 48.4483,
+          "ref_std": 17.9219654835813,
+          "curr_std": 17.9219654835813,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999996817323152,
+          "ref_mean": 4.9534,
+          "curr_mean": 4.9534,
+          "ref_std": 3.142008221116895,
+          "curr_std": 3.142008221116895,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999999826553,
+          "ref_mean": 100744.66495750613,
+          "curr_mean": 100744.66495750613,
+          "ref_std": 57654.43956757595,
+          "curr_std": 57654.43956757595,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999991009749666,
+          "ref_mean": 2.5167,
+          "curr_mean": 2.5167,
+          "ref_std": 1.1123150787809397,
+          "curr_std": 1.1123150787809397,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000492428,
+          "ref_mean": 0.4963,
+          "curr_mean": 0.4963,
+          "ref_std": 0.5000113110031743,
+          "curr_std": 0.5000113110031743,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980001020421,
+          "ref_mean": 0.5007,
+          "curr_mean": 0.5007,
+          "ref_std": 0.5000245118504143,
+          "curr_std": 0.5000245118504143,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999999732867,
+          "ref_mean": 85520.44399858611,
+          "curr_mean": 85520.44399858611,
+          "ref_std": 37434.62923535589,
+          "curr_std": 37434.62923535589,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.999998000063043,
+          "ref_mean": 0.5032,
+          "curr_mean": 0.5032,
+          "ref_std": 0.500014761258253,
+          "curr_std": 0.500014761258253,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000846428,
+          "ref_mean": 0.4978,
+          "curr_mean": 0.4978,
+          "ref_std": 0.5000201616097112,
+          "curr_std": 0.5000201616097112,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "overall_drift": false,
+    "recommendation": "CONTINUE MONITORING"
+  },
+  {
+    "timestamp": "2026-01-08T02:10:46.994899",
+    "ks_test": {
+      "timestamp": "2026-01-08T02:10:46.936642",
+      "test_type": "Kolmogorov-Smirnov",
+      "overall_drift": true,
+      "features_with_drift": [
+        "Age"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Age": {
+          "ks_statistic": 0.0557,
+          "p_value": 6.618903608896064e-14,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Tenure": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Balance": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        }
+      }
+    },
+    "psi_test": {
+      "timestamp": "2026-01-08T02:10:46.964025",
+      "test_type": "Population Stability Index",
+      "overall_drift": false,
+      "features_with_drift": [],
+      "feature_results": {
+        "CreditScore": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Age": {
+          "psi_value": 0.05480341960963966,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "statistical_test": {
+      "timestamp": "2026-01-08T02:10:46.994899",
+      "test_type": "Statistical Comparison",
+      "overall_drift": false,
+      "features_with_drift": [],
+      "feature_results": {
+        "CreditScore": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999937107088,
+          "ref_mean": 574.8849,
+          "curr_mean": 574.8849,
+          "ref_std": 159.00042693517068,
+          "curr_std": 159.00042693517068,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Age": {
+          "mean_change_zscore": 0.16739234518423882,
+          "std_ratio": 0.9999999442025516,
+          "ref_mean": 48.4483,
+          "curr_mean": 51.4483,
+          "ref_std": 17.9219654835813,
+          "curr_std": 17.9219654835813,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999996817323152,
+          "ref_mean": 4.9534,
+          "curr_mean": 4.9534,
+          "ref_std": 3.142008221116895,
+          "curr_std": 3.142008221116895,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999999826553,
+          "ref_mean": 100744.66495750613,
+          "curr_mean": 100744.66495750613,
+          "ref_std": 57654.43956757595,
+          "curr_std": 57654.43956757595,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999991009749666,
+          "ref_mean": 2.5167,
+          "curr_mean": 2.5167,
+          "ref_std": 1.1123150787809397,
+          "curr_std": 1.1123150787809397,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000492428,
+          "ref_mean": 0.4963,
+          "curr_mean": 0.4963,
+          "ref_std": 0.5000113110031743,
+          "curr_std": 0.5000113110031743,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980001020421,
+          "ref_mean": 0.5007,
+          "curr_mean": 0.5007,
+          "ref_std": 0.5000245118504143,
+          "curr_std": 0.5000245118504143,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999999732867,
+          "ref_mean": 85520.44399858611,
+          "curr_mean": 85520.44399858611,
+          "ref_std": 37434.62923535589,
+          "curr_std": 37434.62923535589,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.999998000063043,
+          "ref_mean": 0.5032,
+          "curr_mean": 0.5032,
+          "ref_std": 0.500014761258253,
+          "curr_std": 0.500014761258253,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000846428,
+          "ref_mean": 0.4978,
+          "curr_mean": 0.4978,
+          "ref_std": 0.5000201616097112,
+          "curr_std": 0.5000201616097112,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "overall_drift": true,
+    "recommendation": "RETRAIN MODEL"
+  },
+  {
+    "timestamp": "2026-01-08T02:10:47.057763",
+    "ks_test": {
+      "timestamp": "2026-01-08T02:10:46.996471",
+      "test_type": "Kolmogorov-Smirnov",
+      "overall_drift": true,
+      "features_with_drift": [
+        "Age",
+        "Balance"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Age": {
+          "ks_statistic": 0.1791,
+          "p_value": 1.761212548053232e-140,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Tenure": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Balance": {
+          "ks_statistic": 0.203,
+          "p_value": 1.2355185915058402e-180,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "NumOfProducts": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        }
+      }
+    },
+    "psi_test": {
+      "timestamp": "2026-01-08T02:10:47.030647",
+      "test_type": "Population Stability Index",
+      "overall_drift": true,
+      "features_with_drift": [
+        "Age",
+        "Balance"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Age": {
+          "psi_value": 0.8751244002818055,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Tenure": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "psi_value": 1.4447191575307938,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "NumOfProducts": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "statistical_test": {
+      "timestamp": "2026-01-08T02:10:47.057763",
+      "test_type": "Statistical Comparison",
+      "overall_drift": false,
+      "features_with_drift": [],
+      "feature_results": {
+        "CreditScore": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999937107088,
+          "ref_mean": 574.8849,
+          "curr_mean": 574.8849,
+          "ref_std": 159.00042693517068,
+          "curr_std": 159.00042693517068,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Age": {
+          "mean_change_zscore": 0.4054937278594776,
+          "std_ratio": 1.149999935832934,
+          "ref_mean": 48.4483,
+          "curr_mean": 55.715545,
+          "ref_std": 17.9219654835813,
+          "curr_std": 20.61026030611849,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999996817323152,
+          "ref_mean": 4.9534,
+          "curr_mean": 4.9534,
+          "ref_std": 3.142008221116895,
+          "curr_std": 3.142008221116895,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "mean_change_zscore": 0.4368469527731577,
+          "std_ratio": 1.2499999999783191,
+          "ref_mean": 100744.66495750613,
+          "curr_mean": 125930.8311968827,
+          "ref_std": 57654.43956757595,
+          "curr_std": 72068.04945946994,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999991009749666,
+          "ref_mean": 2.5167,
+          "curr_mean": 2.5167,
+          "ref_std": 1.1123150787809397,
+          "curr_std": 1.1123150787809397,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000492428,
+          "ref_mean": 0.4963,
+          "curr_mean": 0.4963,
+          "ref_std": 0.5000113110031743,
+          "curr_std": 0.5000113110031743,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980001020421,
+          "ref_mean": 0.5007,
+          "curr_mean": 0.5007,
+          "ref_std": 0.5000245118504143,
+          "curr_std": 0.5000245118504143,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999999999732867,
+          "ref_mean": 85520.44399858611,
+          "curr_mean": 85520.44399858611,
+          "ref_std": 37434.62923535589,
+          "curr_std": 37434.62923535589,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.999998000063043,
+          "ref_mean": 0.5032,
+          "curr_mean": 0.5032,
+          "ref_std": 0.500014761258253,
+          "curr_std": 0.500014761258253,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000846428,
+          "ref_mean": 0.4978,
+          "curr_mean": 0.4978,
+          "ref_std": 0.5000201616097112,
+          "curr_std": 0.5000201616097112,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "overall_drift": true,
+    "recommendation": "RETRAIN MODEL"
+  },
+  {
+    "timestamp": "2026-01-08T02:10:47.132335",
+    "ks_test": {
+      "timestamp": "2026-01-08T02:10:47.061885",
+      "test_type": "Kolmogorov-Smirnov",
+      "overall_drift": true,
+      "features_with_drift": [
+        "CreditScore",
+        "Age",
+        "Balance",
+        "EstimatedSalary"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "ks_statistic": 0.4609,
+          "p_value": 0.0,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Age": {
+          "ks_statistic": 0.3117,
+          "p_value": 1e-323,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Tenure": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Balance": {
+          "ks_statistic": 0.5061,
+          "p_value": 0.0,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "NumOfProducts": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "ks_statistic": 0.4666,
+          "p_value": 0.0,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Geography_Germany": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "ks_statistic": 0.0,
+          "p_value": 1.0,
+          "drift_detected": "False",
+          "severity": "LOW"
+        }
+      }
+    },
+    "psi_test": {
+      "timestamp": "2026-01-08T02:10:47.102059",
+      "test_type": "Population Stability Index",
+      "overall_drift": true,
+      "features_with_drift": [
+        "CreditScore",
+        "Age",
+        "Balance",
+        "EstimatedSalary"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "psi_value": 4.209419664950327,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Age": {
+          "psi_value": 1.8298866537466312,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Tenure": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "psi_value": 3.8562601875652986,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "NumOfProducts": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "psi_value": 3.305386489913137,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Geography_Germany": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "psi_value": 0.0,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "statistical_test": {
+      "timestamp": "2026-01-08T02:10:47.132335",
+      "test_type": "Statistical Comparison",
+      "overall_drift": true,
+      "features_with_drift": [
+        "Balance",
+        "EstimatedSalary"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "mean_change_zscore": 1.0846855712257546,
+          "std_ratio": 0.6999999955974961,
+          "ref_mean": 574.8849,
+          "curr_mean": 402.41943,
+          "ref_std": 159.00042693517068,
+          "curr_std": 111.30029885461948,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Age": {
+          "mean_change_zscore": 0.8109874557189565,
+          "std_ratio": 1.299999927463317,
+          "ref_mean": 48.4483,
+          "curr_mean": 62.982790000000016,
+          "ref_std": 17.9219654835813,
+          "curr_std": 23.29855512865569,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999996817323152,
+          "ref_mean": 4.9534,
+          "curr_mean": 4.9534,
+          "ref_std": 3.142008221116895,
+          "curr_std": 3.142008221116895,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "mean_change_zscore": 1.747387811092628,
+          "std_ratio": 1.9999999999653106,
+          "ref_mean": 100744.66495750613,
+          "curr_mean": 201489.32991501226,
+          "ref_std": 57654.43956757595,
+          "curr_std": 115308.8791351519,
+          "drift_detected": true,
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999991009749666,
+          "ref_mean": 2.5167,
+          "curr_mean": 2.5167,
+          "ref_std": 1.1123150787809397,
+          "curr_std": 1.1123150787809397,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000492428,
+          "ref_mean": 0.4963,
+          "curr_mean": 0.4963,
+          "ref_std": 0.5000113110031743,
+          "curr_std": 0.5000113110031743,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980001020421,
+          "ref_mean": 0.5007,
+          "curr_mean": 0.5007,
+          "ref_std": 0.5000245118504143,
+          "curr_std": 0.5000245118504143,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "mean_change_zscore": 0.9138110433377028,
+          "std_ratio": 0.599999999983972,
+          "ref_mean": 85520.44399858611,
+          "curr_mean": 51312.26639915166,
+          "ref_std": 37434.62923535589,
+          "curr_std": 22460.777541213534,
+          "drift_detected": true,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.999998000063043,
+          "ref_mean": 0.5032,
+          "curr_mean": 0.5032,
+          "ref_std": 0.500014761258253,
+          "curr_std": 0.500014761258253,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "mean_change_zscore": 0.0,
+          "std_ratio": 0.9999980000846428,
+          "ref_mean": 0.4978,
+          "curr_mean": 0.4978,
+          "ref_std": 0.5000201616097112,
+          "curr_std": 0.5000201616097112,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "overall_drift": true,
+    "recommendation": "RETRAIN MODEL"
+  },
+  {
+    "timestamp": "2026-01-08T02:10:47.210804",
+    "ks_test": {
+      "timestamp": "2026-01-08T02:10:47.138541",
+      "test_type": "Kolmogorov-Smirnov",
+      "overall_drift": true,
+      "features_with_drift": [
+        "CreditScore",
+        "Age",
+        "Tenure",
+        "Balance",
+        "NumOfProducts",
+        "HasCrCard",
+        "IsActiveMember",
+        "EstimatedSalary"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "ks_statistic": 0.1833,
+          "p_value": 3.647772356433493e-147,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Age": {
+          "ks_statistic": 0.4067,
+          "p_value": 0.0,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Tenure": {
+          "ks_statistic": 0.2648,
+          "p_value": 1.352525058337341e-308,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Balance": {
+          "ks_statistic": 0.5061,
+          "p_value": 0.0,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "NumOfProducts": {
+          "ks_statistic": 0.5034,
+          "p_value": 0.0,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "HasCrCard": {
+          "ks_statistic": 0.2122,
+          "p_value": 1.8136507629000206e-197,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "IsActiveMember": {
+          "ks_statistic": 0.0984,
+          "p_value": 1.5282513643318188e-42,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "EstimatedSalary": {
+          "ks_statistic": 0.3873,
+          "p_value": 0.0,
+          "drift_detected": "True",
+          "severity": "HIGH"
+        },
+        "Geography_Germany": {
+          "ks_statistic": 0.0037,
+          "p_value": 0.9999998582247128,
+          "drift_detected": "False",
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "ks_statistic": 0.0014,
+          "p_value": 0.9999999999999993,
+          "drift_detected": "False",
+          "severity": "LOW"
+        }
+      }
+    },
+    "psi_test": {
+      "timestamp": "2026-01-08T02:10:47.184633",
+      "test_type": "Population Stability Index",
+      "overall_drift": true,
+      "features_with_drift": [
+        "CreditScore",
+        "Age",
+        "Tenure",
+        "Balance",
+        "NumOfProducts",
+        "HasCrCard",
+        "EstimatedSalary"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "psi_value": 1.6909773361147995,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Age": {
+          "psi_value": 3.986567109391238,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Tenure": {
+          "psi_value": 1.9985286213005358,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Balance": {
+          "psi_value": 3.9087193731426755,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "NumOfProducts": {
+          "psi_value": 4.293265879097044,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "HasCrCard": {
+          "psi_value": 0.19159757064636007,
+          "drift_detected": true,
+          "severity": "MEDIUM"
+        },
+        "IsActiveMember": {
+          "psi_value": 0.03925338434902891,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "psi_value": 2.517703087402663,
+          "drift_detected": true,
+          "severity": "HIGH"
+        },
+        "Geography_Germany": {
+          "psi_value": 5.476064910442558e-05,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "psi_value": 7.840268869646134e-06,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "statistical_test": {
+      "timestamp": "2026-01-08T02:10:47.210804",
+      "test_type": "Statistical Comparison",
+      "overall_drift": true,
+      "features_with_drift": [
+        "CreditScore",
+        "Age",
+        "Balance",
+        "NumOfProducts",
+        "EstimatedSalary"
+      ],
+      "feature_results": {
+        "CreditScore": {
+          "mean_change_zscore": 0.003985523864491453,
+          "std_ratio": 0.6378163644737441,
+          "ref_mean": 574.8849,
+          "curr_mean": 574.2512,
+          "ref_std": 159.00042693517068,
+          "curr_std": 101.4130748953801,
+          "drift_detected": true,
+          "severity": "LOW"
+        },
+        "Age": {
+          "mean_change_zscore": 0.4977132396811369,
+          "std_ratio": 0.48332348326920244,
+          "ref_mean": 48.4483,
+          "curr_mean": 39.5283,
+          "ref_std": 17.9219654835813,
+          "curr_std": 8.662107267878413,
+          "drift_detected": true,
+          "severity": "LOW"
+        },
+        "Tenure": {
+          "mean_change_zscore": 0.46858551213183236,
+          "std_ratio": 0.7224436717713104,
+          "ref_mean": 4.9534,
+          "curr_mean": 3.4811,
+          "ref_std": 3.142008221116895,
+          "curr_std": 2.269924678443005,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Balance": {
+          "mean_change_zscore": 0.7964836671920245,
+          "std_ratio": 0.44624932903681885,
+          "ref_mean": 100744.66495750613,
+          "curr_mean": 54823.845500025796,
+          "ref_std": 57654.43956757595,
+          "curr_std": 25728.254973470837,
+          "drift_detected": true,
+          "severity": "LOW"
+        },
+        "NumOfProducts": {
+          "mean_change_zscore": 0.9099931389190533,
+          "std_ratio": 0.4495167875308148,
+          "ref_mean": 2.5167,
+          "curr_mean": 1.5045,
+          "ref_std": 1.1123150787809397,
+          "curr_std": 0.5000047504524807,
+          "drift_detected": true,
+          "severity": "LOW"
+        },
+        "HasCrCard": {
+          "mean_change_zscore": 0.4243895506777889,
+          "std_ratio": 0.9089295549025938,
+          "ref_mean": 0.4963,
+          "curr_mean": 0.7085,
+          "ref_std": 0.5000113110031743,
+          "curr_std": 0.45447596728593254,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "IsActiveMember": {
+          "mean_change_zscore": 0.1967899590480033,
+          "std_ratio": 0.9801605992559986,
+          "ref_mean": 0.5007,
+          "curr_mean": 0.5991,
+          "ref_std": 0.5000245118504143,
+          "curr_std": 0.49010530533858954,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "EstimatedSalary": {
+          "mean_change_zscore": 0.5456580627314325,
+          "std_ratio": 0.5395804160505442,
+          "ref_mean": 85520.44399858611,
+          "curr_mean": 65093.93673040671,
+          "ref_std": 37434.62923535589,
+          "curr_std": 20198.992818050778,
+          "drift_detected": true,
+          "severity": "LOW"
+        },
+        "Geography_Germany": {
+          "mean_change_zscore": 0.0073997667407307375,
+          "std_ratio": 1.0000179806418847,
+          "ref_mean": 0.5032,
+          "curr_mean": 0.4995,
+          "ref_std": 0.500014761258253,
+          "curr_std": 0.5000247518625929,
+          "drift_detected": false,
+          "severity": "LOW"
+        },
+        "Geography_Spain": {
+          "mean_change_zscore": 0.002799881500000943,
+          "std_ratio": 0.9999817596708337,
+          "ref_mean": 0.4978,
+          "curr_mean": 0.4964,
+          "ref_std": 0.5000201616097112,
+          "curr_std": 0.5000120410591333,
+          "drift_detected": false,
+          "severity": "LOW"
+        }
+      }
+    },
+    "overall_drift": true,
+    "recommendation": "RETRAIN MODEL"
+  }
+]
