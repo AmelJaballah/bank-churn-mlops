@@ -800,7 +800,16 @@ def main():
                                 'psi': round(psi, 4),
                                 'drift_detected': psi > 0.1 or p_value < 0.05
                             }
-
+                    
+                    # Store in session state
+                    st.session_state['drift_results'] = drift_results
+                    st.session_state['ref_data'] = ref_data
+                    st.session_state['prod_data'] = prod_data
+                    st.session_state['drift_intensity'] = drift_intensity
+                    
+                    st.success("✅ Analyse terminée!")
+        
+        with col_drift2:
             if 'drift_results' in st.session_state:
                 drift_results = st.session_state['drift_results']
                 
