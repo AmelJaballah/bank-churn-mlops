@@ -256,6 +256,91 @@ def calculate_psi(reference: np.array, production: np.array, buckets: int = 10) 
     psi = np.sum((prod_pct - ref_pct) * np.log(prod_pct / ref_pct))
     return float(psi)
 
+def detect_outliers(data: pd.DataFrame, feature: str) -> Dict[str, Any]:
+    """Détecte les valeurs extrêmes avec la méthode IQR"""
+    Q1 = data[feature].quantile(0.25)
+    Q3 = data[feature].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound = Q1 - 3 * IQR
+    upper_bound = Q3 + 3 * IQR
+    
+    outliers = data[(data[feature] < lower_bound) | (data[feature] > upper_bound)]
+    
+    return {
+        'count': len(outliers),
+        'percentage': len(outliers) / len(data) * 100,
+        'lower_bound': lower_bound,
+        'upper_bound': upper_bound,
+        'min_value': data[feature].min(),
+        'max_value': data[feature].max()
+    }
+
+def analyze_prediction_drift(ref_data: pd.DataFrame, prod_data: pd.DataFrame, api_url: str) -> Dict[str, Any]:
+    """Analyse l'impact du drift sur les prédictions"""
+    # Sample pour ne pas surcharger l'API
+    ref_sample = ref_data.sample(min(50, len(ref_data)))
+    prod_sample = prod_data.sample(min(50, len(prod_data)))
+    
+    ref_predictions = []
+    prod_predictions = []
+    
+    # Prédictions sur données de référence
+    for _, row in ref_sample.iterrows():
+        feat = {
+            'CreditScore': int(row.get('CreditScore', 650)),
+            'Age': int(row.get('Age', 40)),
+            'Tenure': int(row.get('Tenure', 5)),
+            'Balance': float(row.get('Balance', 50000)),
+            'NumOfProducts': int(row.get('NumOfProducts', 2)),
+            'HasCrCard': int(row.get('HasCrCard', 1)),
+            'IsActiveMember': int(row.get('IsActiveMember', 1)),
+            'EstimatedSalary': float(row.get('EstimatedSalary', 75000)),
+            'Geography_Germany': int(row.get('Geography_Germany', 0)),
+            'Geography_Spain': int(row.get('Geography_Spain', 0))
+        }
+        try:
+            result = make_prediction(feat)
+            if result:
+                ref_predictions.append(result['churn_probability'])
+        except:
+            continue
+    
+    # Prédictions sur données avec drift
+    for _, row in prod_sample.iterrows():
+        feat = {
+            'CreditScore': int(row.get('CreditScore', 650)),
+            'Age': int(row.get('Age', 40)),
+            'Tenure': int(row.get('Tenure', 5)),
+            'Balance': float(row.get('Balance', 50000)),
+            'NumOfProducts': int(row.get('NumOfProducts', 2)),
+            'HasCrCard': int(row.get('HasCrCard', 1)),
+            'IsActiveMember': int(row.get('IsActiveMember', 1)),
+            'EstimatedSalary': float(row.get('EstimatedSalary', 75000)),
+            'Geography_Germany': int(row.get('Geography_Germany', 0)),
+            'Geography_Spain': int(row.get('Geography_Spain', 0))
+        }
+        try:
+            result = make_prediction(feat)
+            if result:
+                prod_predictions.append(result['churn_probability'])
+        except:
+            continue
+    
+    if len(ref_predictions) > 0 and len(prod_predictions) > 0:
+        from scipy import stats
+        ks_stat, p_value = stats.ks_2samp(ref_predictions, prod_predictions)
+        
+        return {
+            'ref_mean': np.mean(ref_predictions),
+            'prod_mean': np.mean(prod_predictions),
+            'diff_mean': abs(np.mean(prod_predictions) - np.mean(ref_predictions)),
+            'ks_statistic': ks_stat,
+            'p_value': p_value,
+            'prediction_drift_detected': ks_stat > 0.2 or p_value < 0.05
+        }
+    
+    return None
+
 def create_gauge_chart(probability: float) -> go.Figure:
     """Crée un graphique jauge pour la probabilité de churn"""
     fig = go.Figure(go.Indicator(
@@ -525,6 +610,21 @@ def main():
             
             # Bouton de prédiction
             if st.button("🔍 Analyser le Risque de Churn", type="primary", key="predict_btn"):
+                # Vérification des valeurs extrêmes
+                warnings = []
+                if credit_score < 400 or credit_score > 800:
+                    warnings.append("⚠️ Credit Score extrême détecté")
+                if age < 20 or age > 75:
+                    warnings.append("⚠️ Âge inhabituel détecté")
+                if balance > 200000:
+                    warnings.append("⚠️ Solde très élevé détecté")
+                if estimated_salary > 200000:
+                    warnings.append("⚠️ Salaire très élevé détecté")
+                
+                if warnings:
+                    st.warning("**Valeurs atypiques détectées:**\n" + "\n".join(warnings))
+                    st.caption("Ces valeurs peuvent indiquer un drift ou des données inhabituelles.")
+                
                 with st.spinner("Analyse en cours..."):
                     result = make_prediction(features)
                     
@@ -687,8 +787,70 @@ def main():
             # Detailed table
             st.markdown("#### 📋 Détails par Feature")
             drift_df = pd.DataFrame(st.session_state['drift_results']).T
+            drift_df.index.name = 'Feature'
+            drift_df = drift_df.reset_index()
             drift_df['Status'] = drift_df['drift_detected'].apply(lambda x: '🔴 Drift' if x else '🟢 Stable')
-            st.dataframe(drift_df[['psi', 'ks_statistic', 'p_value', 'Status']], use_container_width=True)
+            st.dataframe(drift_df[['Feature', 'psi', 'ks_statistic', 'p_value', 'Status']], use_container_width=True, hide_index=True)
+            
+            # Outliers Analysis
+            st.markdown("---")
+            st.markdown("#### ⚠️ Détection des Valeurs Extrêmes")
+            
+            outlier_results = {}
+            for feature in ['CreditScore', 'Age', 'Balance', 'EstimatedSalary']:
+                if feature in prod_data.columns:
+                    outlier_results[feature] = detect_outliers(prod_data, feature)
+            
+            col_out1, col_out2 = st.columns(2)
+            with col_out1:
+                st.markdown("**Outliers détectés:**")
+                for feature, info in outlier_results.items():
+                    if info['count'] > 0:
+                        st.warning(f"🔸 **{feature}**: {info['count']} valeurs extrêmes ({info['percentage']:.1f}%)")
+                        st.caption(f"   Range: [{info['min_value']:.1f}, {info['max_value']:.1f}] | Limites: [{info['lower_bound']:.1f}, {info['upper_bound']:.1f}]")
+            
+            with col_out2:
+                # Analyze prediction drift
+                st.markdown("**Impact sur les prédictions:**")
+                with st.spinner("Analyse en cours..."):
+                    pred_drift = analyze_prediction_drift(ref_data, prod_data, API_URL)
+                    
+                    if pred_drift:
+                        if pred_drift['prediction_drift_detected']:
+                            st.error(f"🚨 **Drift de prédiction détecté!**")
+                            st.metric("Écart moyen proba.", f"{pred_drift['diff_mean']*100:.2f}%")
+                        else:
+                            st.success("✅ Prédictions stables")
+                        
+                        col_p1, col_p2 = st.columns(2)
+                        with col_p1:
+                            st.metric("Proba. moy. Réf.", f"{pred_drift['ref_mean']*100:.1f}%")
+                        with col_p2:
+                            st.metric("Proba. moy. Prod.", f"{pred_drift['prod_mean']*100:.1f}%")
+                        
+                        st.caption(f"KS stat: {pred_drift['ks_statistic']:.4f} | p-value: {pred_drift['p_value']:.6f}")
+            
+            # Export button
+            st.markdown("---")
+            col_exp1, col_exp2 = st.columns(2)
+            with col_exp1:
+                csv = drift_df.to_csv(index=False)
+                st.download_button(
+                    "📥 Télécharger rapport drift",
+                    csv,
+                    f"{datetime.now().strftime('%Y-%m-%dT%H-%M')}_drift_report.csv",
+                    "text/csv"
+                )
+            with col_exp2:
+                if outlier_results:
+                    outlier_df = pd.DataFrame(outlier_results).T
+                    outlier_csv = outlier_df.to_csv()
+                    st.download_button(
+                        "📥 Télécharger outliers",
+                        outlier_csv,
+                        f"{datetime.now().strftime('%Y-%m-%dT%H-%M')}_outliers.csv",
+                        "text/csv"
+                    )
     
     # ═══════════════════════════════════════════════════════════════
     # TAB 3: BATCH PREDICTION
