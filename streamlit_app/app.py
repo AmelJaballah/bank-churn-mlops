@@ -191,9 +191,23 @@ def get_api_info() -> Dict[str, Any]:
 def make_prediction(features: Dict[str, Any]) -> Dict[str, Any]:
     """Envoie une requête de prédiction à l'API"""
     try:
+        # Convert all values to int/float as needed
+        payload = {
+            "CreditScore": int(features["CreditScore"]),
+            "Age": int(features["Age"]),
+            "Tenure": int(features["Tenure"]),
+            "Balance": float(features["Balance"]),
+            "NumOfProducts": int(features["NumOfProducts"]),
+            "HasCrCard": int(features["HasCrCard"]),
+            "IsActiveMember": int(features["IsActiveMember"]),
+            "EstimatedSalary": float(features["EstimatedSalary"]),
+            "Geography_Germany": int(features["Geography_Germany"]),
+            "Geography_Spain": int(features["Geography_Spain"])
+        }
+        
         response = requests.post(
             f"{API_URL}/predict",
-            json=features,
+            json=payload,
             headers={"Content-Type": "application/json"},
             timeout=10
         )
@@ -423,7 +437,7 @@ def main():
         """, unsafe_allow_html=True)
     
     # Main Tabs
-    tab1, tab2, tab3, tab4 = st.tabs(["🔮 Prédiction", "📊 Analyse Drift", "📁 Batch", "📈 Dashboard"])
+    tab1, tab2, tab3 = st.tabs(["🔮 Prédiction", "📊 Analyse Drift", "📁 Batch"])
     
     # ═══════════════════════════════════════════════════════════════
     # TAB 1: PREDICTION
@@ -615,6 +629,13 @@ def main():
                                 'psi': round(psi, 4),
                                 'drift_detected': psi > 0.1 or p_value < 0.05
                             }
+                            
+                            drift_results[feature] = {
+                                'ks_statistic': round(ks_stat, 4),
+                                'p_value': round(p_value, 6),
+                                'psi': round(psi, 4),
+                                'drift_detected': psi > 0.1 or p_value < 0.05
+                            }
                     
                     # Store in session state
                     st.session_state['drift_results'] = drift_results
@@ -721,78 +742,6 @@ def main():
                         
             except Exception as e:
                 st.error(f"Erreur: {e}")
-    
-    # ═══════════════════════════════════════════════════════════════
-    # TAB 4: DASHBOARD
-    # ═══════════════════════════════════════════════════════════════
-    with tab4:
-        st.markdown("### 📈 Dashboard MLOps")
-        
-        col_d1, col_d2, col_d3, col_d4 = st.columns(4)
-        
-        with col_d1:
-            st.markdown("""
-            <div class="metric-card">
-                <div class="metric-value">v2.0</div>
-                <div class="metric-label">Version API</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_d2:
-            status_emoji = "🟢" if api_status else "🔴"
-            st.markdown(f"""
-            <div class="metric-card">
-                <div class="metric-value">{status_emoji}</div>
-                <div class="metric-label">Statut API</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_d3:
-            st.markdown("""
-            <div class="metric-card">
-                <div class="metric-value">RF</div>
-                <div class="metric-label">Modèle</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        with col_d4:
-            st.markdown("""
-            <div class="metric-card">
-                <div class="metric-value">Azure</div>
-                <div class="metric-label">Cloud</div>
-            </div>
-            """, unsafe_allow_html=True)
-        
-        st.markdown("---")
-        
-        st.markdown("#### 🔗 Liens Utiles")
-        col_link1, col_link2, col_link3 = st.columns(3)
-        
-        with col_link1:
-            st.markdown(f"🌐 **API Documentation**")
-            st.code(f"{API_URL}/docs")
-        
-        with col_link2:
-            st.markdown("📊 **Health Check**")
-            st.code(f"{API_URL}/health")
-        
-        with col_link3:
-            st.markdown("🔄 **Drift Check**")
-            st.code(f"{API_URL}/drift/check")
-        
-        st.markdown("---")
-        st.markdown("#### ℹ️ Architecture")
-        st.markdown("""
-        ```
-        ┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-        │   Streamlit UI  │────▶│   FastAPI       │────▶│   ML Model      │
-        │   (Container)   │     │   (Container)   │     │   (PKL)         │
-        └─────────────────┘     └─────────────────┘     └─────────────────┘
-                │                       │                       │
-                └───────────────────────┴───────────────────────┘
-                            Azure Container Apps
-        ```
-        """)
     
     # Footer
     st.markdown("---")
